@@ -165,7 +165,7 @@
     },
     "Page": {
       "Header": {
-        "rollupActionsLabelOverride": "View page actions"
+        "rollupActionsLabelOverride": "View more actions"
       }
     },
     "Pagination": {

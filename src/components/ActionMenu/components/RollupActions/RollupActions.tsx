@@ -10,6 +10,7 @@ import {useToggle} from '../../../../utilities/use-toggle';
 import {ActionList} from '../../../ActionList';
 import {Button} from '../../../Button';
 import {Popover} from '../../../Popover';
+import {Tooltip} from '../../../Tooltip';
 
 import styles from './RollupActions.scss';
 
@@ -41,12 +42,14 @@ export function RollupActions({
 
   const activatorMarkup = (
     <div className={styles.RollupActivator}>
-      <Button
-        outline
-        icon={HorizontalDotsMinor}
-        accessibilityLabel={accessibilityLabel}
-        onClick={toggleRollupOpen}
-      />
+      <Tooltip content={accessibilityLabel}>
+        <Button
+          outline
+          icon={HorizontalDotsMinor}
+          accessibilityLabel={accessibilityLabel}
+          onClick={toggleRollupOpen}
+        />
+      </Tooltip>
     </div>
   );
 
