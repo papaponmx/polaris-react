@@ -1,6 +1,4 @@
 import React from 'react';
-// eslint-disable-next-line no-restricted-imports
-import {mountWithAppProvider} from 'test-utilities/legacy';
 import {mountWithApp} from 'test-utilities';
 
 import {Key} from '../../../types';
@@ -9,7 +7,7 @@ import {Checkbox} from '../Checkbox';
 
 describe('<Checkbox />', () => {
   it('sets pass through properties on the input', () => {
-    const input = mountWithAppProvider(
+    const input = mountWithApp(
       <Checkbox label="Checkbox" checked name="Checkbox" value="Some value" />,
     ).find('input');
 
@@ -19,7 +17,7 @@ describe('<Checkbox />', () => {
   });
 
   it('does not change checked states when onChange is not provided', () => {
-    const element = mountWithAppProvider(
+    const element = mountWithApp(
       <Checkbox id="MyCheckbox" label="Checkbox" checked />,
     );
     element.simulate('click');
@@ -28,7 +26,7 @@ describe('<Checkbox />', () => {
 
   it('does not propagate click events from input element', () => {
     const spy = jest.fn();
-    const element = mountWithAppProvider(
+    const element = mountWithApp(
       <Checkbox id="MyCheckbox" label="Checkbox" onChange={spy} />,
     );
 
@@ -39,7 +37,7 @@ describe('<Checkbox />', () => {
   describe('onChange()', () => {
     it('is called with the updated checked value of the input on click', () => {
       const spy = jest.fn();
-      const element = mountWithAppProvider(
+      const element = mountWithApp(
         <Checkbox id="MyCheckbox" label="Checkbox" onChange={spy} />,
       );
       (element.find('input') as any).instance().checked = true;
@@ -49,7 +47,7 @@ describe('<Checkbox />', () => {
 
     it('is called when space is pressed', () => {
       const spy = jest.fn();
-      const element = mountWithAppProvider(
+      const element = mountWithApp(
         <Checkbox id="MyCheckbox" label="Checkbox" onChange={spy} />,
       );
 
@@ -62,7 +60,7 @@ describe('<Checkbox />', () => {
 
     it('is not from keys other than space', () => {
       const spy = jest.fn();
-      const element = mountWithAppProvider(
+      const element = mountWithApp(
         <Checkbox id="MyCheckbox" label="Checkbox" onChange={spy} />,
       );
 
@@ -84,7 +82,7 @@ describe('<Checkbox />', () => {
 
     it('is not called from keyboard events when disabled', () => {
       const spy = jest.fn();
-      const checkbox = mountWithAppProvider(
+      const checkbox = mountWithApp(
         <Checkbox label="label" disabled onChange={spy} />,
       );
       checkbox.find('input').simulate('keyup', {
@@ -95,7 +93,7 @@ describe('<Checkbox />', () => {
 
     it('is not called from click events when disabled', () => {
       const spy = jest.fn();
-      const checkbox = mountWithAppProvider(
+      const checkbox = mountWithApp(
         <Checkbox label="label" disabled onChange={spy} />,
       );
       checkbox.find('input').simulate('click');
@@ -106,9 +104,7 @@ describe('<Checkbox />', () => {
   describe('onFocus()', () => {
     it('is called when the input is focused', () => {
       const spy = jest.fn();
-      const element = mountWithAppProvider(
-        <Checkbox label="Checkbox" onFocus={spy} />,
-      );
+      const element = mountWithApp(<Checkbox label="Checkbox" onFocus={spy} />);
       element.find('input').simulate('focus');
       expect(spy).toHaveBeenCalled();
     });
@@ -117,9 +113,7 @@ describe('<Checkbox />', () => {
   describe('onBlur()', () => {
     it('is called when the input is focused', () => {
       const spy = jest.fn();
-      const element = mountWithAppProvider(
-        <Checkbox label="Checkbox" onBlur={spy} />,
-      );
+      const element = mountWithApp(<Checkbox label="Checkbox" onBlur={spy} />);
       element.find('input').simulate('blur');
       expect(spy).toHaveBeenCalled();
     });
@@ -127,16 +121,14 @@ describe('<Checkbox />', () => {
 
   describe('id', () => {
     it('sets the id on the input', () => {
-      const id = mountWithAppProvider(
-        <Checkbox id="MyCheckbox" label="Checkbox" />,
-      )
+      const id = mountWithApp(<Checkbox id="MyCheckbox" label="Checkbox" />)
         .find('input')
         .prop('id');
       expect(id).toBe('MyCheckbox');
     });
 
     it('sets a random id on the input when none is passed', () => {
-      const id = mountWithAppProvider(<Checkbox label="Checkbox" />)
+      const id = mountWithApp(<Checkbox label="Checkbox" />)
         .find('input')
         .prop('id');
       expect(typeof id).toBe('string');
@@ -146,15 +138,13 @@ describe('<Checkbox />', () => {
 
   describe('disabled', () => {
     it('sets the disabled attribute on the input', () => {
-      const button = mountWithAppProvider(
-        <Checkbox label="Checkbox" disabled />,
-      );
+      const button = mountWithApp(<Checkbox label="Checkbox" disabled />);
 
       expect(button.find('input').prop('disabled')).toBe(true);
     });
 
     it('is only disabled when disabled is explicitly set to true', () => {
-      let element = mountWithAppProvider(<Checkbox label="Checkbox" />);
+      let element = mountWithApp(<Checkbox label="Checkbox" />);
       expect(element.find('input').prop('disabled')).toBeFalsy();
 
       element = mountWithAppProvider(
@@ -165,7 +155,7 @@ describe('<Checkbox />', () => {
 
     it('can change values when disabled', () => {
       const spy = jest.fn();
-      const checkbox = mountWithAppProvider(
+      const checkbox = mountWithApp(
         <Checkbox label="label" disabled onChange={spy} />,
       );
       checkbox.find('input').simulate('keyup', {
@@ -178,7 +168,7 @@ describe('<Checkbox />', () => {
 
   describe('helpText', () => {
     it('connects the input to the help text', () => {
-      const checkbox = mountWithAppProvider(
+      const checkbox = mountWithApp(
         <Checkbox label="Checkbox" helpText="Some help" />,
       );
       const helpTextID = checkbox
@@ -191,7 +181,7 @@ describe('<Checkbox />', () => {
 
   describe('error', () => {
     it('marks the input as invalid', () => {
-      const checkbox = mountWithAppProvider(
+      const checkbox = mountWithApp(
         <Checkbox error={<span>Error</span>} label="Checkbox" />,
       );
       expect(checkbox.find('input').prop('aria-invalid')).toBe(true);
@@ -201,7 +191,7 @@ describe('<Checkbox />', () => {
     });
 
     it('connects the input to the error if the error is not boolean', () => {
-      const checkbox = mountWithAppProvider(
+      const checkbox = mountWithApp(
         <Checkbox label="Checkbox" error="Some error" />,
       );
       const errorID = checkbox.find('input').prop('aria-describedby');
@@ -210,15 +200,13 @@ describe('<Checkbox />', () => {
     });
 
     it('does not connect the input to the error if the error is boolean', () => {
-      const checkbox = mountWithAppProvider(
-        <Checkbox label="Checkbox" error />,
-      );
+      const checkbox = mountWithApp(<Checkbox label="Checkbox" error />);
       const errorID = checkbox.find('input').prop('aria-describedby');
       expect(errorID).toBeUndefined();
     });
 
     it('connects the input to both an error and help text', () => {
-      const checkbox = mountWithAppProvider(
+      const checkbox = mountWithApp(
         <Checkbox label="Checkbox" error="Some error" helpText="Some help" />,
       );
       const descriptions = checkbox
@@ -233,21 +221,21 @@ describe('<Checkbox />', () => {
 
   describe('indeterminate', () => {
     it('sets the indeterminate attribute to be true on the input when checked is "indeterminate"', () => {
-      const checkbox = mountWithAppProvider(
+      const checkbox = mountWithApp(
         <Checkbox label="Checkbox" checked="indeterminate" />,
       );
       expect(checkbox.find('input').prop('indeterminate')).toBe('true');
     });
 
     it('sets the aria-checked attribute on the input as mixed when checked is "indeterminate"', () => {
-      const checkbox = mountWithAppProvider(
+      const checkbox = mountWithApp(
         <Checkbox label="Checkbox" checked="indeterminate" />,
       );
       expect(checkbox.find('input').prop('aria-checked')).toBe('mixed');
     });
 
     it('sets the checked attribute on the input to false when checked is "indeterminate"', () => {
-      const checkbox = mountWithAppProvider(
+      const checkbox = mountWithApp(
         <Checkbox label="Checkbox" checked="indeterminate" />,
       );
       expect(checkbox.find('input').prop('checked')).toBe(false);
@@ -256,7 +244,7 @@ describe('<Checkbox />', () => {
 
   describe('ariaDescribedBy', () => {
     it('sets the aria-describedBy attribute on the input', () => {
-      const checkBox = mountWithAppProvider(
+      const checkBox = mountWithApp(
         <Checkbox label="checkbox" ariaDescribedBy="SomeId" />,
       );
       const ariaDescribedBy = checkBox.find('input').prop('aria-describedby');

@@ -1,11 +1,6 @@
 import React from 'react';
 import {animationFrame, dimension} from '@shopify/jest-dom-mocks';
-// eslint-disable-next-line no-restricted-imports
-import {
-  mountWithAppProvider,
-  findByTestID,
-  trigger,
-} from 'test-utilities/legacy';
+import {mountWithApp} from 'test-utilities';
 
 import {Resizer} from '../Resizer';
 import {EventListener} from '../../../../EventListener';
@@ -27,7 +22,7 @@ describe('<Resizer />', () => {
   it('cancels existing animationFrame on update', () => {
     const cancelAnimationFrameSpy = jest.spyOn(window, 'cancelAnimationFrame');
     const contents = 'Contents';
-    const resizer = mountWithAppProvider(
+    const resizer = mountWithApp(
       <Resizer
         {...mockProps}
         currentHeight={1}
@@ -38,7 +33,7 @@ describe('<Resizer />', () => {
     );
 
     resizer.setProps({currentHeight: 2});
-    trigger(resizer.find(EventListener), 'handler');
+    resizer.find(EventListener)!.trigger('handler');
 
     expect(cancelAnimationFrameSpy).toHaveBeenCalled();
   });
@@ -46,7 +41,7 @@ describe('<Resizer />', () => {
   it('cancels the animationFrame unmount', () => {
     const cancelAnimationFrameSpy = jest.spyOn(window, 'cancelAnimationFrame');
     const contents = 'Contents';
-    const resizer = mountWithAppProvider(
+    const resizer = mountWithApp(
       <Resizer {...mockProps} contents={contents} />,
     );
 
@@ -58,16 +53,15 @@ describe('<Resizer />', () => {
   describe('contents', () => {
     it('renders contents', () => {
       const contents = 'Contents';
-      const resizer = mountWithAppProvider(
+      const resizer = mountWithApp(
         <Resizer {...mockProps} contents={contents} />,
       );
-      const contentsNode = findByTestID(resizer, 'ContentsNode');
-      expect(contentsNode.text()).toBe(contents);
+      expect(resizer.find('div')).toContainReactText(contents);
     });
 
     it('encodes HTML entities', () => {
       const contents = `<div>&\nContents</div>`;
-      const resizer = mountWithAppProvider(
+      const resizer = mountWithApp(
         <Resizer {...mockProps} contents={contents} />,
       );
       const contentsNode = findByTestID(resizer, 'ContentsNode');
@@ -78,7 +72,7 @@ describe('<Resizer />', () => {
 
     it('ignores carriage returns when rendering content', () => {
       const contents = `<div>&\n\r\r\rContents</div>`;
-      const resizer = mountWithAppProvider(
+      const resizer = mountWithApp(
         <Resizer {...mockProps} contents={contents} />,
       );
       const contentsNode = findByTestID(resizer, 'ContentsNode');
@@ -91,7 +85,7 @@ describe('<Resizer />', () => {
   describe('minimumLines', () => {
     it('renders a number of <br> tags equivalent to minimumLines', () => {
       const minimumLines = 3;
-      const resizer = mountWithAppProvider(
+      const resizer = mountWithApp(
         <Resizer {...mockProps} minimumLines={minimumLines} />,
       );
       const breakingSpaces = findByTestID(resizer, 'MinimumLines');
@@ -99,7 +93,7 @@ describe('<Resizer />', () => {
     });
 
     it('renders nothing when minimumLines is undefined', () => {
-      const resizer = mountWithAppProvider(
+      const resizer = mountWithApp(
         <Resizer {...mockProps} minimumLines={undefined} />,
       );
       const breakingSpaces = findByTestID(resizer, 'MinimumLines');
@@ -118,7 +112,7 @@ describe('<Resizer />', () => {
 
     it('is called on mount if minimumLines is provided', () => {
       const spy = jest.fn();
-      mountWithAppProvider(
+      mountWithApp(
         <Resizer
           {...mockProps}
           currentHeight={50}
@@ -132,7 +126,7 @@ describe('<Resizer />', () => {
 
     it('is not called on mount if minimumLines is not provided', () => {
       const spy = jest.fn();
-      mountWithAppProvider(
+      mountWithApp(
         <Resizer {...mockProps} currentHeight={50} onHeightChange={spy} />,
       );
       animationFrame.runFrame();
@@ -141,7 +135,7 @@ describe('<Resizer />', () => {
 
     it('is not called on mount if currentHeight is the same as DOM height', () => {
       const spy = jest.fn();
-      mountWithAppProvider(
+      mountWithApp(
         <Resizer
           {...mockProps}
           currentHeight={30}
@@ -156,7 +150,7 @@ describe('<Resizer />', () => {
     it('is called again on resize', () => {
       const spy = jest.fn();
       const currentHeight = 50;
-      const resizer = mountWithAppProvider(
+      const resizer = mountWithApp(
         <Resizer
           {...mockProps}
           currentHeight={currentHeight}
@@ -173,7 +167,7 @@ describe('<Resizer />', () => {
     it('is not called again on resize if minimumLines is not provided', () => {
       const spy = jest.fn();
       const currentHeight = 0;
-      const resizer = mountWithAppProvider(
+      const resizer = mountWithApp(
         <Resizer
           {...mockProps}
           currentHeight={currentHeight}
@@ -190,7 +184,7 @@ describe('<Resizer />', () => {
   it('is not called again on resize if currentHeight is the same as DOM height', () => {
     const spy = jest.fn();
     const currentHeight = 0;
-    const resizer = mountWithAppProvider(
+    const resizer = mountWithApp(
       <Resizer
         {...mockProps}
         currentHeight={currentHeight}
@@ -206,7 +200,7 @@ describe('<Resizer />', () => {
   describe('aria-hidden', () => {
     it('renders aria-hidden as true', () => {
       const contents = 'Contents';
-      const resizer = mountWithAppProvider(
+      const resizer = mountWithApp(
         <Resizer {...mockProps} contents={contents} />,
       );
       const wrapperDiv = findByTestID(resizer, 'ResizerWrapper');
@@ -217,12 +211,12 @@ describe('<Resizer />', () => {
   describe('lifecycle', () => {
     it('mounts safely', () => {
       expect(() => {
-        mountWithAppProvider(<Resizer {...mockProps} />);
+        mountWithApp(<Resizer {...mockProps} />);
       }).not.toThrow();
     });
 
     it('updates safely', () => {
-      const resizer = mountWithAppProvider(<Resizer {...mockProps} />);
+      const resizer = mountWithApp(<Resizer {...mockProps} />);
 
       expect(() => {
         resizer.setProps({contents: 'new content'});
@@ -230,7 +224,7 @@ describe('<Resizer />', () => {
     });
 
     it('unmounts safely', () => {
-      const resizer = mountWithAppProvider(<Resizer {...mockProps} />);
+      const resizer = mountWithApp(<Resizer {...mockProps} />);
 
       expect(() => {
         resizer.unmount();
